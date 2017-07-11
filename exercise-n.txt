@@ -1,0 +1,207 @@
+[2]
+
+mysql> create database decodemtl_test;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> create database decodemtl_addressbook;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> show databases;
++-----------------------+
+| Database              |
++-----------------------+
+| information_schema    |
+| c9                    |
+| decodemtl_addressbook |
+| decodemtl_test        |
+| mysql                 |
+| performance_schema    |
+| phpmyadmin            |
++-----------------------+
+7 rows in set (0.00 sec)
+
+[3]
+mysql> DROP DATABASE decodemtl_test;
+Query OK, 0 rows affected (0.01 sec)
+
+[4]
+mysql> SHOW DATABASE;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DATABASE' at line 1
+mysql> SHOW DATABASES;
++-----------------------+
+| Database              |
++-----------------------+
+| information_schema    |
+| c9                    |
+| decodemtl_addressbook |
+| mysql                 |
+| performance_schema    |
+| phpmyadmin            |
++-----------------------+
+6 rows in set (0.00 sec)
+
+[5]
+mysql> USE decodemtl_addressbook;
+Database changed
+
+mysql> CREATE TABLE ACCOUNT(id INT);
+Query OK, 0 rows affected (0.02 sec)
+mysql> CREATE TABLE Address (id INT);
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> create table Entry(id INT);
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> CREATE TABLE Test(id INT);
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> SHOW TABLES;
++---------------------------------+
+| Tables_in_decodemtl_addressbook |
++---------------------------------+
+| ACCOUNT                         |
+| Address                         |
+| Entry                           |
+| Test                            |
++---------------------------------+
+4 rows in set (0.00 sec)
+
+
+[6]
+mysql> DROP TABLE Test;
+Query OK, 0 rows affected (0.00 sec)
+
+[7]
+mysql> show tables;
++---------------------------------+
+| Tables_in_decodemtl_addressbook |
++---------------------------------+
+| ACCOUNT                         |
+| Address                         |
+| Entry                           |
++---------------------------------+
+3 rows in set (0.00 sec)
+
+[8]
+
+
+mysql> ALTER TABLE ACCOUNT 
+    -> ADD PRIMARY KEY AUTO_INCREMENT (id);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE Address
+    -> add PRIMARY KEY AUTO_INCREMENT (id);
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE Entry
+    -> add PRIMARY KEY AUTO_INCREMENT (id);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+
+mysql> describe ACCOUNT;
++-------+---------+------+-----+---------+-------+
+| Field | Type    | Null | Key | Default | Extra |
++-------+---------+------+-----+---------+-------+
+| id    | int(11) | NO   | PRI | 0       |       |
++-------+---------+------+-----+---------+-------+
+1 row in set (0.00 sec)
+
+
+mysql> DESCRIBE Address;
++-----------+---------+------+-----+---------+-------+
+| Field     | Type    | Null | Key | Default | Extra |
++-----------+---------+------+-----+---------+-------+
+| id        | int(11) | NO   | PRI | 0       |       |
+| accountId | int(11) | YES  |     | NULL    |       |
++-----------+---------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> describe Entry;
++-------+---------+------+-----+---------+-------+
+| Field | Type    | Null | Key | Default | Extra |
++-------+---------+------+-----+---------+-------+
+| id    | int(11) | NO   | PRI | 0       |       |
++-------+---------+------+-----+---------+-------+
+1 row in set (0.01 sec)
+
+mysql> ALTER TABLE Entry add type ENUM('home','work','other');                                                       
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+
+mysql> ALTER TABLE Entry 
+    -> add subtype ENUM('phone','address','email');
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+
+mysql> ALTER table Address
+    -> add accountId int;
+Query OK, 0 rows affected (0.06 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE Entry
+    -> add adressBookId INT;
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> describe Address;
++-----------+---------+------+-----+---------+-------+
+| Field     | Type    | Null | Key | Default | Extra |
++-----------+---------+------+-----+---------+-------+
+| id        | int(11) | YES  |     | NULL    |       |
+| accountId | int(11) | YES  |     | NULL    |       |
++-----------+---------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> describe Entry;
++--------------+---------------------------------+------+-----+---------+-------+
+| Field        | Type                            | Null | Key | Default | Extra |
++--------------+---------------------------------+------+-----+---------+-------+
+| id           | int(11)                         | NO   | PRI | 0       |       |
+| type         | enum('home','work','other')     | YES  |     | NULL    |       |
+| subtype      | enum('phone','address','email') | YES  |     | NULL    |       |
+| adressBookId | int(11)                         | YES  |     | NULL    |       |
++--------------+---------------------------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> ALTER TABLE Address
+    -> ADD FOREIGN KEY (accountId) REFERENCES ACCOUNT (id);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE Entry ADD FOREIGN KEY (adressBookId) REFERENCES Address (accountId);
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+[9]
+
+
+CREATE TABLE Barn (
+chickenId INT PRIMARY KEY AUTO_INCREMENT,
+TYPE ENUM ('Rooster','hen', 'Chick'),
+Birthdate Date);
+
+
+Select * from Barn where Birthdate < curdate() - Interval 40 DAY;
+
+mysql> describe Barn;
++-----------+-------------------------------+------+-----+---------+----------------+
+| Field     | Type                          | Null | Key | Default | Extra          |
++-----------+-------------------------------+------+-----+---------+----------------+
+| chickenId | int(11)                       | NO   | PRI | NULL    | auto_increment |
+| TYPE      | enum('Rooster','hen','Chick') | YES  |     | NULL    |                |
+| Birthdate | date                          | YES  |     | NULL    |                |
++-----------+-------------------------------+------+-----+---------+----------------+
+3 rows in set (0.00 sec)
+
++-----------+---------+------------+
+| chickenId | TYPE    | Birthdate  |
++-----------+---------+------------+
+|         1 | hen     | 2017-04-03 |
+|         2 | hen     | 2017-01-03 |
+|         3 | Rooster | 2017-05-03 |
++-----------+---------+------------+
